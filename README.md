@@ -41,6 +41,39 @@ If you don't have conda, or are new to scientific python, we recommend that
 you download the [Anaconda scientific python distribution](https://store.continuum.io/cshop/anaconda/).
 
 
+NOTE
+
+Installation via the version on omnia or conda-forge is old and is
+broken with the current versions of scikit-learn due to API
+deprecation. Furthermore, we have found the installation process for
+the cutting edge in the main msmbuilder repo to be complicated. This
+repo reverted to the last release (3.8) and added the small patch
+needed to adapt to the scikit-learn API change.
+
+Thus, to install this msmbuilder, just install directly from this
+repo. You can either clone and install locally or directly from this
+repo after installing the package dependencies (easiest just to do it
+by hand from conda-forge):
+
+```bash
+pip install git+https://github.com/salotz/msmbuilder
+```
+
+Here is a command to install both the build and runtime dependencies:
+
+```bash
+conda install -c conda-forge \
+      cython=0.27.3 mdtraj=1.8 numpy \
+      scipy pandas six scikit-learn numpydoc pytables pyhmc fastcluster pyyaml jinja2 
+```
+
+It is recommended that you also
+[pin](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-pkgs.html#id8)
+the versions of cython and mdtraj in your environment as these will be
+automatically upgraded if you install anything else.
+
+
+
 Workflow
 --------
 
