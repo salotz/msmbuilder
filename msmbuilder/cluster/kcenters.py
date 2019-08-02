@@ -12,6 +12,8 @@ import numpy as np
 from sklearn.utils import check_random_state
 from sklearn.base import ClusterMixin, TransformerMixin
 
+from scipy.spatial import distance as dist
+
 from .. import libdistance
 from . import MultiSequenceClusterMixin
 from ..base import BaseEstimator
@@ -76,7 +78,8 @@ class _KCenters(ClusterMixin, TransformerMixin):
         self.metric = metric
         self.random_state = random_state
 
-    def fit(self, X, y=None):
+    def fit(self, X, y=None,
+            memmap=True):
         if isinstance(X, np.ndarray):
             if not (X.dtype == 'float32' or X.dtype == 'float64'):
                 X = X.astype('float64')
@@ -89,7 +92,15 @@ class _KCenters(ClusterMixin, TransformerMixin):
         cluster_ids_ = []
 
         for i in range(self.n_clusters):
-            d = libdistance.dist(X, X[new_center_index], metric=self.metric)
+
+            # if we want the memory view optimizations (??) used in
+            # the libdistance we use them otherwise fall back on the
+            # scipy.spatial distance function
+            if memmap:
+                d = libdistance.dist(X, X[new_center_index], metric=self.metric)
+            else:
+                d = dist.cdist(X, np.array([X[new_center_index]]), metric=self.metric)
+
             mask = (d < self.distances_)
             self.distances_[mask] = d[mask]
             self.labels_[mask] = i
@@ -137,12 +148,10 @@ class KCenters(MultiSequenceClusterMixin, _KCenters, BaseEstimator):
     ----------
     `cluster_centers_` : array, [n_clusters, n_features]
         Coordinates of cluster centers
-
     `labels_` : list of arrays, each of shape [sequence_length, ]
         `labels_[i]` is an array of the labels of each point in
         sequence `i`. The label of each point is an integer in
         [0, n_clusters).
-
     `distances_` : list of arrays, each of shape [sequence_length, ]
         `distances_[i]` is an array of  the labels of each point in
         sequence `i`. Distance from each sample to the cluster center
@@ -151,7 +160,6 @@ class KCenters(MultiSequenceClusterMixin, _KCenters, BaseEstimator):
 
     def fit(self, sequences, y=None):
         """Fit the kcenters clustering on the data
-
         Parameters
         ----------
         sequences : list of array-like, each of shape [sequence_length, n_features]
@@ -159,7 +167,6 @@ class KCenters(MultiSequenceClusterMixin, _KCenters, BaseEstimator):
             sequence may have a different length, but they all must have the
             same number of features, or the same number of atoms if they are
             ``md.Trajectory``s.
-
         Returns
         -------
         self
@@ -173,7 +180,6 @@ class KCenters(MultiSequenceClusterMixin, _KCenters, BaseEstimator):
 --------------------
 n_clusters : {n_clusters}
 metric     : {metric}
-
 Inertia       : {inertia}
 Mean distance : {mean_distance}
 Max  distance : {max_distance}
