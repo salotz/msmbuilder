@@ -78,8 +78,7 @@ class _KCenters(ClusterMixin, TransformerMixin):
         self.metric = metric
         self.random_state = random_state
 
-    def fit(self, X, y=None,
-            memmap=True):
+    def fit(self, X, y=None):
         if isinstance(X, np.ndarray):
             if not (X.dtype == 'float32' or X.dtype == 'float64'):
                 X = X.astype('float64')
@@ -96,10 +95,8 @@ class _KCenters(ClusterMixin, TransformerMixin):
             # if we want the memory view optimizations (??) used in
             # the libdistance we use them otherwise fall back on the
             # scipy.spatial distance function
-            if memmap:
-                d = libdistance.dist(X, X[new_center_index], metric=self.metric)
-            else:
-                d = dist.cdist(X, np.array([X[new_center_index]]), metric=self.metric)
+            # d = libdistance.dist(X, X[new_center_index], metric=self.metric)
+            d = dist.cdist(X, np.array([X[new_center_index]]), metric=self.metric)
 
             mask = (d < self.distances_)
             self.distances_[mask] = d[mask]
