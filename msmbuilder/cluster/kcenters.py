@@ -96,6 +96,7 @@ class _KCenters(ClusterMixin, TransformerMixin):
             # the libdistance we use them otherwise fall back on the
             # scipy.spatial distance function
             # d = libdistance.dist(X, X[new_center_index], metric=self.metric)
+            print("Warning, using scipy.spatial.cdist")
             d = dist.cdist(X, np.array([X[new_center_index]]), metric=self.metric)
 
             mask = (d < self.distances_)
