@@ -1,0 +1,24 @@
+# core
+setuptools
+wheel
+twine
+
+
+# meta repo tooling
+
+# NOTE: we are including the .jubeo/requirements.in in the dev.requirements.list so you need not write them all here
+
+# virtual environments
+virtualenv
+
+# interactive and debugging
+ipython
+pdbpp
+remote-pdb
+
+
+# build dependencies
+numpy
+cython
+pytest-runner
+mdtraj
