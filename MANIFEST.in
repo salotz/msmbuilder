@@ -1,4 +1,16 @@
 graft examples
 graft msmbuilder
-include basesetup.py
+
 include LICENSE
+include AUTHORS.org
+include CHANGELOG.org
+include LICENSE
+include README.org
+
+include basesetup.py
+include pyproject.toml
+
+include requirements.in
+include versioneer.py
+
+global-exclude *.py[co] __pycache__ *.so *~
