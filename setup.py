@@ -27,6 +27,7 @@ base_requirements = [
     'mdtraj',
     'scipy',
     'pandas',
+    'joblib',
     'six',
     'scikit-learn',
     'numpydoc',

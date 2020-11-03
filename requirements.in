@@ -2,6 +2,7 @@ six
 mdtraj
 scipy
 pandas
+joblib
 scikit-learn
 numpydoc
 tables
