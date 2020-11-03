@@ -18,7 +18,7 @@ from setuptools import setup, find_packages
 
 import itertools as it
 
-from Cython.Build import cythonize
+from Cython.Build import cythonize, build_ext
 
 
 import versioneer
@@ -60,8 +60,8 @@ from basesetup import CompilerDetection
 
 # get the C API from mdtraj
 # DEBUG
-# import mdtraj
-# mdtraj_capi = mdtraj.capi()
+import mdtraj
+mdtraj_capi = mdtraj.capi()
 
 # ## NOTE: just tests to see if it can find mdtraj. not sure why
 # try:
@@ -133,116 +133,115 @@ from basesetup import CompilerDetection
 
 ## DEBUG
 
-# # Where to find extensions
-# MSMDIR = 'msmbuilder/msm/'
-# HMMDIR = 'msmbuilder/hmm/'
-# CLUSTERDIR = 'msmbuilder/cluster/'
+# Where to find extensions
+MSMDIR = 'msmbuilder/msm/'
+HMMDIR = 'msmbuilder/hmm/'
+CLUSTERDIR = 'msmbuilder/cluster/'
 
 # # compiler = CompilerDetection(DISABLE_OPENMP)
 
-# compiler = CompilerDetection(True)
-# with open('msmbuilder/src/config.pxi', 'w') as f:
-#     f.write('''
-# DEF DEBUG = {debug}
-# DEF OPENMP = {openmp}
-#     '''.format(openmp=compiler.openmp_enabled, debug=False))
+compiler = CompilerDetection(True)
+with open('msmbuilder/src/config.pxi', 'w') as f:
+    f.write('''
+DEF DEBUG = {debug}
+DEF OPENMP = {openmp}
+    '''.format(openmp=compiler.openmp_enabled, debug=False))
 
-# extensions = []
-# extensions.append(
-#     Extension('msmbuilder.example_datasets._muller',
-#               sources=[pjoin('msmbuilder', 'example_datasets', '_muller.pyx')],
-#               include_dirs=[np.get_include()]))
+extensions = []
+extensions.append(
+    Extension('msmbuilder.example_datasets._muller',
+              sources=[pjoin('msmbuilder', 'example_datasets', '_muller.pyx')],
+              include_dirs=[np.get_include()]))
 
-# extensions.append(
-#     Extension('msmbuilder.msm._markovstatemodel',
-#               sources=[pjoin(MSMDIR, '_markovstatemodel.pyx'),
-#                        pjoin(MSMDIR, 'src/transmat_mle_prinz.c')],
-#               include_dirs=[pjoin(MSMDIR, 'src'), np.get_include()]))
+extensions.append(
+    Extension('msmbuilder.msm._markovstatemodel',
+              sources=[pjoin(MSMDIR, '_markovstatemodel.pyx'),
+                       pjoin(MSMDIR, 'src/transmat_mle_prinz.c')],
+              include_dirs=[pjoin(MSMDIR, 'src'), np.get_include()]))
 
-# extensions.append(
-#     Extension('msmbuilder.tests.test_cyblas',
-#               sources=['msmbuilder/tests/test_cyblas.pyx'],
-#               include_dirs=['msmbuilder/src', np.get_include()]))
+extensions.append(
+    Extension('msmbuilder.tests.test_cyblas',
+              sources=['msmbuilder/tests/test_cyblas.pyx'],
+              include_dirs=['msmbuilder/src', np.get_include()]))
 
-# extensions.append(
-#     Extension('msmbuilder.msm._ratematrix',
-#               sources=[pjoin(MSMDIR, '_ratematrix.pyx')],
-#               language='c++',
-#               extra_compile_args=compiler.compiler_args_openmp,
-#               libraries=compiler.compiler_libraries_openmp,
-#               include_dirs=['msmbuilder/src', np.get_include()]))
+extensions.append(
+    Extension('msmbuilder.msm._ratematrix',
+              sources=[pjoin(MSMDIR, '_ratematrix.pyx')],
+              language='c++',
+              extra_compile_args=compiler.compiler_args_openmp,
+              libraries=compiler.compiler_libraries_openmp,
+              include_dirs=['msmbuilder/src', np.get_include()]))
 
-# extensions.append(
-#     Extension('msmbuilder.decomposition._speigh',
-#               sources=[pjoin('msmbuilder', 'decomposition', '_speigh.pyx')],
-#               language='c++',
-#               extra_compile_args=compiler.compiler_args_openmp,
-#               libraries=compiler.compiler_libraries_openmp,
-#               include_dirs=['msmbuilder/src', np.get_include()]))
+extensions.append(
+    Extension('msmbuilder.decomposition._speigh',
+              sources=[pjoin('msmbuilder', 'decomposition', '_speigh.pyx')],
+              language='c++',
+              extra_compile_args=compiler.compiler_args_openmp,
+              libraries=compiler.compiler_libraries_openmp,
+              include_dirs=['msmbuilder/src', np.get_include()]))
 
-# extensions.append(
-#     Extension('msmbuilder.msm._metzner_mcmc_fast',
-#               sources=[pjoin(MSMDIR, '_metzner_mcmc_fast.pyx'),
-#                        pjoin(MSMDIR, 'src/metzner_mcmc.c')],
-#               libraries=compiler.compiler_libraries_openmp,
-#               extra_compile_args=compiler.compiler_args_openmp,
-#               include_dirs=[pjoin(MSMDIR, 'src'), np.get_include()]))
+extensions.append(
+    Extension('msmbuilder.msm._metzner_mcmc_fast',
+              sources=[pjoin(MSMDIR, '_metzner_mcmc_fast.pyx'),
+                       pjoin(MSMDIR, 'src/metzner_mcmc.c')],
+              libraries=compiler.compiler_libraries_openmp,
+              extra_compile_args=compiler.compiler_args_openmp,
+              include_dirs=[pjoin(MSMDIR, 'src'), np.get_include()]))
 
-# extensions.append(
-#     Extension('msmbuilder.libdistance',
-#               language='c++',
-#               sources=['msmbuilder/libdistance/libdistance.pyx'],
-#               # msvc needs to be told "libtheobald", gcc wants just "theobald"
-#               libraries=['%stheobald' % ('lib' if compiler.msvc else '')],
-#               include_dirs=["msmbuilder/libdistance/src",
-#                             mdtraj_capi['include_dir'], np.get_include()],
-#               library_dirs=[mdtraj_capi['lib_dir']],
-#               ))
+extensions.append(
+    Extension('msmbuilder.libdistance',
+              language='c++',
+              sources=['msmbuilder/libdistance/libdistance.pyx'],
+              # msvc needs to be told "libtheobald", gcc wants just "theobald"
+              libraries=['%stheobald' % ('lib' if compiler.msvc else '')],
+              include_dirs=["msmbuilder/libdistance/src",
+                            mdtraj_capi['include_dir'], np.get_include()],
+              library_dirs=[mdtraj_capi['lib_dir']],
+              ))
 
-# extensions.append(
-#     Extension('msmbuilder.cluster._kmedoids',
-#               language='c++',
-#               sources=[pjoin(CLUSTERDIR, '_kmedoids.pyx'),
-#                        pjoin(CLUSTERDIR, 'src', 'kmedoids.cc')],
-#               include_dirs=[np.get_include()]))
+extensions.append(
+    Extension('msmbuilder.cluster._kmedoids',
+              language='c++',
+              sources=[pjoin(CLUSTERDIR, '_kmedoids.pyx'),
+                       pjoin(CLUSTERDIR, 'src', 'kmedoids.cc')],
+              include_dirs=[np.get_include()]))
 
 # # To get debug symbols on Windows, use
 # # extra_link_args=['/DEBUG']
 # # extra_compile_args=['/Zi']
 
-# extensions.append(
-#     Extension('msmbuilder.hmm.gaussian',
-#               language='c++',
-#               sources=[pjoin(HMMDIR, 'gaussian.pyx'),
-#                        pjoin(HMMDIR, 'src/GaussianHMMFitter.cpp')],
-#               libraries=compiler.compiler_libraries_openmp,
-#               extra_compile_args=compiler.compiler_args_sse3
-#                                  + compiler.compiler_args_openmp,
-#               include_dirs=[np.get_include(),
-#                             HMMDIR,
-#                             pjoin(HMMDIR, 'src/include/'),
-#                             pjoin(HMMDIR, 'src/')]))
+extensions.append(
+    Extension('msmbuilder.hmm.gaussian',
+              language='c++',
+              sources=[pjoin(HMMDIR, 'gaussian.pyx'),
+                       pjoin(HMMDIR, 'src/GaussianHMMFitter.cpp')],
+              libraries=compiler.compiler_libraries_openmp,
+              extra_compile_args=compiler.compiler_args_sse3
+                                 + compiler.compiler_args_openmp,
+              include_dirs=[np.get_include(),
+                            HMMDIR,
+                            pjoin(HMMDIR, 'src/include/'),
+                            pjoin(HMMDIR, 'src/')]))
 
-# extensions.append(
-#     Extension('msmbuilder.hmm.vonmises',
-#               language='c++',
-#               sources=[pjoin(HMMDIR, 'vonmises.pyx'),
-#                        pjoin(HMMDIR, 'src/VonMisesHMMFitter.cpp'),
-#                        pjoin(HMMDIR, 'cephes/i0.c'),
-#                        pjoin(HMMDIR, 'cephes/chbevl.c')],
-#               libraries=compiler.compiler_libraries_openmp,
-#               extra_compile_args=compiler.compiler_args_sse3
-#                                  + compiler.compiler_args_openmp,
-#               include_dirs=[np.get_include(),
-#                             HMMDIR,
-#                             pjoin(HMMDIR, 'src/include/'),
-#                             pjoin(HMMDIR, 'src/'),
-#                             pjoin(HMMDIR, 'cephes/')]))
+extensions.append(
+    Extension('msmbuilder.hmm.vonmises',
+              language='c++',
+              sources=[pjoin(HMMDIR, 'vonmises.pyx'),
+                       pjoin(HMMDIR, 'src/VonMisesHMMFitter.cpp'),
+                       pjoin(HMMDIR, 'cephes/i0.c'),
+                       pjoin(HMMDIR, 'cephes/chbevl.c')],
+              libraries=compiler.compiler_libraries_openmp,
+              extra_compile_args=compiler.compiler_args_sse3
+                                 + compiler.compiler_args_openmp,
+              include_dirs=[np.get_include(),
+                            HMMDIR,
+                            pjoin(HMMDIR, 'src/include/'),
+                            pjoin(HMMDIR, 'src/'),
+                            pjoin(HMMDIR, 'cephes/')]))
 
 
 cython_extensions = []
-
-extensions = cythonize(cython_extensions)
+extensions.extend(cythonize(cython_extensions))
 
 ## set up the cmdclasses by merging the custom build ones and the versioneer ones
 
@@ -252,9 +251,9 @@ cmdclass = {}
 cmdclass.update(versioneer.get_cmdclass())
 
 # TODO: add this when we have extensions to install
-# cmdclass.update({
-#     'build_ext': build_ext,
-# })
+cmdclass.update({
+    'build_ext': build_ext,
+})
 
 setup(
     name='msmbuilder',
