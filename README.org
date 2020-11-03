@@ -46,5 +46,15 @@ For now before releases are made just install directly from the head
 of this repo:
 
 #+begin_src sh
-pip install git@github.com:salotz/msmbuilder.git
+pip install git+https://github.com/salotz/msmbuilder.git
 #+end_src
+
+
+I am marking the earliest certain relevant features are working with tags.
+
+AtomPairsFeaturizer
+
+#+begin_src sh
+pip install git+https://github.com/salotz/msmbuilder.git@WIP.AtomPairsFeaturizer
+#+end_src
+
