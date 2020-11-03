@@ -19,7 +19,7 @@ from msmbuilder.utils import unique
 import itertools
 import inspect
 from sklearn.base import TransformerMixin
-from sklearn.externals.joblib import Parallel, delayed
+from joblib import Parallel, delayed
 from ..base import BaseEstimator
 
 def zippy_maker(aind_tuples, top):

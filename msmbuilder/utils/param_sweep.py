@@ -5,7 +5,7 @@ try:
 except ImportError:
     from sklearn.grid_search import ParameterGrid
 
-from sklearn.externals.joblib import Parallel, delayed
+from joblib import Parallel, delayed
 
 __all__ = ['param_sweep']
 

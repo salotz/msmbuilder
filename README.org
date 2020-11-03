@@ -1,0 +1,60 @@
+* MSMBuilder
+
+** Why the fork?
+
+This is a separately maintained fork of MSMBuilder.
+
+In addition to a lack of maintenance upstream (namely not being able
+to install in Python 3.7) and a number of other breaking changes I
+wanted to make I made this version here.
+
+I also place an emphasis on making it easy to install, so it should be
+completely installable in ~pip~ which shouldn't be an issue with the
+prevalence of wheels nowadays anyhow (at least for linux).
+
+I am not attempting to keep compatibility nor contribute back
+upstream.
+
+I also have no intent to keep this fresh for others, if you fork and
+have this intention, please tell me and I'll probably follow yours.
+
+
+** Description
+
+MSMBuilder is a python package which implements a series of statistical
+models for high-dimensional time-series. It is particularly focused on the
+analysis of atomistic simulations of biomolecular dynamics. For example,
+MSMBuilder has been used to model protein folding and conformational change
+from molecular dynamics (MD) simulations. MSMBuilder is available under the
+LGPL (v2.1 or later).
+
+Capabilities include:
+
+- Feature extraction into dihedrals, contact maps, and more
+- Geometric clustering with a variety of algorithms.
+- Dimensionality reduction using time-structure independent component
+  analysis (tICA) and principal component analysis (PCA).
+- Markov state model (MSM) construction
+- Rate-matrix MSM construction
+- Hidden markov model (HMM) construction
+- Timescale and transition path analysis.
+
+
+** Installation
+
+For now before releases are made just install directly from the head
+of this repo:
+
+#+begin_src sh
+pip install git+https://github.com/salotz/msmbuilder.git
+#+end_src
+
+
+I am marking the earliest certain relevant features are working with tags.
+
+AtomPairsFeaturizer
+
+#+begin_src sh
+pip install git+https://github.com/salotz/msmbuilder.git@WIP.AtomPairsFeaturizer
+#+end_src
+

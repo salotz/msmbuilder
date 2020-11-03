@@ -1,0 +1,7 @@
+six
+mdtraj
+scipy
+pandas
+scikit-learn
+numpydoc
+tables

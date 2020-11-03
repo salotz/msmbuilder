@@ -5,7 +5,7 @@ import pickle
 import warnings
 
 import numpy as np
-from sklearn.externals.joblib import load as jl_load
+from joblib import load as jl_load
 
 __all__ = ['printoptions', 'verbosedump', 'verboseload', 'dump', 'load']
 
