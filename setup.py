@@ -30,8 +30,12 @@ base_requirements = [
     'six',
     'scikit-learn',
     'numpydoc',
-    'pytables',
+    'tables',
 ]
+
+all_requirements = list(it.chain.from_iterable([
+    base_requirements,
+]))
 
 ### OLD
 
@@ -240,7 +244,18 @@ cython_extensions = []
 
 extensions = cythonize(cython_extensions)
 
-### NEW
+## set up the cmdclasses by merging the custom build ones and the versioneer ones
+
+cmdclass = {}
+
+# versioneer has values for: versoin, build_py, sdist
+cmdclass.update(versioneer.get_cmdclass())
+
+# TODO: add this when we have extensions to install
+# cmdclass.update({
+#     'build_ext': build_ext,
+# })
+
 setup(
     name='msmbuilder',
     author='Samuel D Lotz',
@@ -260,13 +275,20 @@ setup(
     setup_requires=[],
     tests_require=[],
 
-    cmdclass=versioneer.get_cmdclass(),
+    cmdclass=cmdclass,
+
+    ext_modules=extensions,
 
     # package
     packages=find_packages(),
 
     # SNIPPET
     # package_dir={'' : 'src'},
+
+    # SNIPPET
+    # if this is true then the package_data won't be included in the
+    # dist. Use MANIFEST.in for this
+    # include_package_data=True,
 
     package_data={
         'msmbuilder.tests': ['workflows/*'],
@@ -275,10 +297,23 @@ setup(
                        'io_templates/*',
         ],
     },
+
+    # SNIPPET
+    # pymodules is for single file standalone modules not part of the
+    # package
+    # py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
+
     entry_points={'console_scripts':
                   ['msmb = msmbuilder.scripts.msmb:main']},
+
+
     zip_safe=False,
-    ext_modules=extensions,
-    # TODO: figure this out
-    # cmdclass={'build_ext': build_ext},
+
+    # dependencies & extras
+    install_requires = base_requirements,
+
+    extras_require = {
+        'all' : all_requirements,
+    }
+
 )

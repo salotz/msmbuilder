@@ -4,4 +4,4 @@ scipy
 pandas
 scikit-learn
 numpydoc
-pytables
+tables
