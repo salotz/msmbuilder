@@ -24,14 +24,19 @@ from Cython.Build import cythonize, build_ext
 import versioneer
 
 base_requirements = [
-    'mdtraj',
+    'numpy',
     'scipy',
     'pandas',
-    'joblib',
     'six',
+    'mdtraj',
     'scikit-learn',
     'numpydoc',
     'tables',
+    'pyhmc',
+    'pyyaml',
+    'jinja2',
+    'fastcluster',
+    'joblib',
 ]
 
 all_requirements = list(it.chain.from_iterable([

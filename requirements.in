@@ -1,8 +1,24 @@
-six
-mdtraj
+numpy
 scipy
 pandas
-joblib
+# this was in theirs but hopefully this isn't an issue
+# pandas < 0.20
+six
+
+mdtraj
+# again in there's lets see if we can get away with it
+# mdtraj <= 1.8
+
 scikit-learn
 numpydoc
 tables
+
+pyhmc
+pyyaml
+jinja2
+fastcluster
+
+# my additions
+joblib
+
+
